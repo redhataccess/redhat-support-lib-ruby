@@ -41,6 +41,8 @@ module  RedHatSupportLib
       end
 
       def add(case_number, is_public, file_name,description)
+        #puts "Sending attachment for case "+ case_number
+        attachment_id = nil
         File.open(file_name) do |file|
           if file.size < @attachments_config[:max_http_size]
             headers = {:description => description}
@@ -48,9 +50,10 @@ module  RedHatSupportLib
             file, headers) do |code,headers|
               if code == 201
                 location = headers[:location]
-                return get_id(location)
+                attachment_id = get_id(location)
               else
                 #What to return here?
+                raise "Attachment failed " + code
               end
             end
           else
@@ -65,6 +68,7 @@ module  RedHatSupportLib
             #TODO what to return here?
           end
         end
+        attachment_id
       end
 
       def  get_id(uri)

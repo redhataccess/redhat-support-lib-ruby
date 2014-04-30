@@ -63,7 +63,7 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
-* Fri Oct 25 2014 Rex White <rexwhite@redhat.com> - 0.0.1-1
+* Wed Apr 30 2014 Rex White <rexwhite@redhat.com> - 0.0.1-1
 - Resolves: bz1084590
 
 * Thu Apr 3 2014 Rex White <rexwhite@redhat.com>

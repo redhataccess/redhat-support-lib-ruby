@@ -1,7 +1,7 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 %{!?scl:%global pkg_name %{name}}
 
-%global gem_name redhat_support_lib
+%global gem_name redhat_access_lib
 %global rubyabi 1.9.1
 
 Name: %{?scl_prefix}rubygem-%{gem_name}

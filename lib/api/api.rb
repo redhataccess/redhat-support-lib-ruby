@@ -10,11 +10,7 @@ require_relative '../brokers/entitlement'
 require_relative '../brokers/comment'
 require_relative '../brokers/group'
 
-
-
 require_relative '../network/http_connection'
-
-
 
 module RedHatSupportLib
   module Api

@@ -9,6 +9,7 @@ module RedHatSupportLib::TelemetryApi
 
     def initialize strata_url, creds, optional
       @creds      = creds
+      @upload_url = "#{strata_url}/rs/telemetry"
       @api_url    = "#{strata_url}/rs/telemetry/api/v1"
       @subset_url = "#{@api_url}/subsets"
 
@@ -17,7 +18,7 @@ module RedHatSupportLib::TelemetryApi
       end
     end
 
-    def call_tapi original_method, resource, original_params, original_payload
+    def call_tapi original_method, resource, original_params, original_payload, extra
 
       begin
         if SUBSETTED_RESOURCES.has_key?(resource)
@@ -25,16 +26,22 @@ module RedHatSupportLib::TelemetryApi
           response = do_subset_call(resource, { params: original_params, method: original_method, payload: original_payload })
           return response
         else
-          url = "#{@api_url}/#{resource}"
+          if resource == "/"
+            url = @upload_url
+          else
+            url = "#{@api_url}/#{resource}"
+          end
+
           ldebug "Doing non subset call to #{url}"
           client = default_rest_client(url, { params: original_params, method: original_method, payload: original_payload })
           response = client.execute
           return { data: response, code: response.code }
         end
       rescue RestClient::ExceptionWithResponse => e
+        lerror nil, "Caught HTTP error when proxying call to tapi: #{e}"
         return { data: e, error: e, code: e.response.code }
       rescue Exception => e
-        lerror "Caught unexcpected error when proxying call to tapi"
+        lerror e, "Caught unexpected error when proxying call to tapi: #{e}"
         return { data: e, error: e, code: 500 }
       end
     end
@@ -47,9 +54,12 @@ module RedHatSupportLib::TelemetryApi
       end
     end
 
-    def lerror message
+    def lerror e, message
       if @logger
         @logger.error "#{self.class.name}: #{message}"
+        if e
+          @logger.error e.backtrace.join("\n")
+        end
       end
     end
 

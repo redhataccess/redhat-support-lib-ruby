@@ -24,7 +24,7 @@ module RedHatSupportLib::TelemetryApi
         if SUBSETTED_RESOURCES.has_key?(resource)
           ldebug "Doing subset call to #{resource}"
           response = do_subset_call(resource, { params: original_params, method: original_method, payload: original_payload })
-          return response
+          return { data: response, code: response.code }
         else
           if resource == "/"
             url = @upload_url

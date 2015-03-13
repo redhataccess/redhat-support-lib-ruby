@@ -5,7 +5,7 @@
 %global rubyabi 1.9.1
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.6
+Version: 0.0.7
 Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
@@ -63,6 +63,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Fri Mar 13 2015 Ian Page Hands <ihands@redhat.com> - 0.0.7-1
+- "fixed" an issue where content-type was being forcefully overridden by this lib... dunno what I was thinking there
+
 * Tue Mar 11 2015 Ian Page Hands <ihands@redhat.com> - 0.0.6-1
 - added telemetry api proxy
 

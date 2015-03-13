@@ -141,12 +141,25 @@ module RedHatSupportLib::TelemetryApi
       end
 
       if override_options[:method] == :post and override_options[:payload]
-        opts[:headers] = { 'content-type' => 'application/json' }
+        opts[:headers] = ensure_content_type opts
         opts[:payload] = override_options[:payload]
       end
 
       return RestClient::Request.new(opts)
     end
+
+
+    def ensure_content_type opts
+      # TODO we should probably not force here.
+      # I would rather throw an exception if nothing is provided
+      # Or even just let it POST w/o anything and have upstream fail
+      if not opts[:headers]['content-type']
+        return { 'content-type' => 'application/json' }
+      end
+      return opts[:headers]['content-type']
+    end
+
+
   end
 
 end

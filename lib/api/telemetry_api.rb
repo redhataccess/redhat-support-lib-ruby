@@ -39,7 +39,7 @@ module RedHatSupportLib::TelemetryApi
         end
       rescue RestClient::ExceptionWithResponse => e
         lerror nil, "Caught HTTP error when proxying call to tapi: #{e}"
-        return { data: e, error: e, code: e.response.code }
+        return { data: e.response, error: e, code: e.response.code }
       rescue Exception => e
         lerror e, "Caught unexpected error when proxying call to tapi: #{e}"
         return { data: e, error: e, code: 500 }

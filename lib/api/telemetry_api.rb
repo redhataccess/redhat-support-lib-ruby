@@ -6,6 +6,12 @@ module RedHatSupportLib::TelemetryApi
   }
 
   class Client
+    # RestClient.log =
+    # Object.new.tap do |proxy|
+    #   def proxy.<<(message)
+    #     Rails.logger.error message
+    #   end
+    # end
 
     def initialize strata_url, creds, optional
       @creds      = creds
@@ -119,47 +125,39 @@ module RedHatSupportLib::TelemetryApi
     # end
 
     # Returns the machines hash used for /subset/$hash/
-    def get_hash machines
+    def get_hash(machines)
       branch = get_branch_id
-      hash   = Digest::SHA1.hexdigest machines.join
+      hash   = Digest::SHA1.hexdigest(machines.join)
       return "#{branch}__#{hash}"
     end
 
-    def default_rest_client url, override_options
+    def default_rest_client(url, override_options)
 
       opts = {
         :method   => :get,
         :url      => url,
       }
-
       opts = opts.merge(get_auth_opts(@creds))
       opts = opts.merge(override_options)
-
       if override_options[:params]
         opts[:url] = "#{url}?#{override_options[:params].to_query}"
         override_options.delete(:params)
       end
-
       if override_options[:method] == :post and override_options[:payload]
-        opts[:headers] = ensure_content_type opts
-        opts[:payload] = override_options[:payload]
+        opts[:headers] = ensure_content_type(opts)
       end
-
-      return RestClient::Request.new(opts)
+      RestClient::Request.new(opts)
     end
 
 
-    def ensure_content_type opts
+    def ensure_content_type(opts)
       # TODO we should probably not force here.
       # I would rather throw an exception if nothing is provided
       # Or even just let it POST w/o anything and have upstream fail
-      if not opts[:headers]['content-type']
-        return { 'content-type' => 'application/json' }
+      if not opts[:headers]
+        return opts[:headers] = {'content-type' => 'application/json', 'accept' => 'application/json'}
       end
-      return opts[:headers]['content-type']
     end
-
-
   end
 
 end

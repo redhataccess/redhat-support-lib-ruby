@@ -13,10 +13,10 @@ module RedHatSupportLib::TelemetryApi
     #   end
     # end
 
-    def initialize strata_url, creds, optional
+    def initialize upload_url, api_url, creds, optional
       @creds      = creds
-      @upload_url = "#{strata_url}/rs/telemetry"
-      @api_url    = "#{strata_url}/rs/telemetry/api/v1"
+      @upload_url = upload_url
+      @api_url    = api_url
       @subset_url = "#{@api_url}/subsets"
 
       if optional
@@ -24,15 +24,22 @@ module RedHatSupportLib::TelemetryApi
       end
     end
 
-    def call_tapi original_method, resource, original_params, original_payload, extra
+    def post_upload original_params, original_payload
+      call_tapi 'POST', '/', original_params, original_payload, { do_upload: true }
+    end
 
+    def call_tapi_no_subset original_method, resource, original_params, original_payload, extra
+      call_tapi original_method, resource, original_params, original_payload, extra, true
+    end
+
+    def call_tapi original_method, resource, original_params, original_payload, extra, no_subset = false
       begin
-        if SUBSETTED_RESOURCES.has_key?(resource)
+        if SUBSETTED_RESOURCES.has_key?(resource) and not no_subset
           ldebug "Doing subset call to #{resource}"
           response = do_subset_call(resource, { params: original_params, method: original_method, payload: original_payload })
           return { data: response, code: response.code }
         else
-          if resource == "/"
+          if extra and extra[:do_upload]
             url = @upload_url
           else
             url = "#{@api_url}/#{resource}"

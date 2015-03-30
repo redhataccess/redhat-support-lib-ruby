@@ -6,12 +6,6 @@ module RedHatSupportLib::TelemetryApi
   }
 
   class Client
-    # RestClient.log =
-    # Object.new.tap do |proxy|
-    #   def proxy.<<(message)
-    #     Rails.logger.error message
-    #   end
-    # end
 
     def initialize upload_url, api_url, creds, optional
       @creds      = creds
@@ -88,7 +82,7 @@ module RedHatSupportLib::TelemetryApi
         return response
       rescue RestClient::ExceptionWithResponse => e
 
-        if e.response.code == 412
+        if  e.response && e.response.code == 412
           create_subset
 
           # retry the original request

@@ -7,12 +7,12 @@ module RedHatSupportLib::TelemetryApi
 
   class Client
 
-     # RestClient.log =
-     #  Object.new.tap do |proxy|
-     #  def proxy.<<(message)
-     #    Rails.logger.error message
-     #  end
-     # end
+    # RestClient.log =
+    # Object.new.tap do |proxy|
+    #   def proxy.<<(message)
+    #     Rails.logger.debug message
+    #   end
+    # end
 
     def initialize upload_url, api_url, creds, optional
       @creds      = creds
@@ -22,7 +22,9 @@ module RedHatSupportLib::TelemetryApi
 
       if optional
         @logger = optional[:logger]
+        @http_proxy = optional[:http_proxy]
       end
+      ldebug ("HTTP proxy is set to #{@http_proxy}")
     end
 
     def post_upload original_params, original_payload
@@ -34,6 +36,7 @@ module RedHatSupportLib::TelemetryApi
     end
 
     def call_tapi original_method, resource, original_params, original_payload, extra, no_subset = false
+      RestClient.proxy = @http_proxy
       begin
         if SUBSETTED_RESOURCES.has_key?(resource) and not no_subset
           ldebug "Doing subset call to #{resource}"
@@ -57,6 +60,8 @@ module RedHatSupportLib::TelemetryApi
       rescue Exception => e
         lerror e, "Caught unexpected error when proxying call to tapi: #{e}"
         return { data: e, error: e, code: 500 }
+      ensure
+        RestClient.proxy = ""
       end
     end
 

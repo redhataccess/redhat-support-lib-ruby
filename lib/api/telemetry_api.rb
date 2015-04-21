@@ -7,6 +7,13 @@ module RedHatSupportLib::TelemetryApi
 
   class Client
 
+     # RestClient.log =
+     #  Object.new.tap do |proxy|
+     #  def proxy.<<(message)
+     #    Rails.logger.error message
+     #  end
+     # end
+
     def initialize upload_url, api_url, creds, optional
       @creds      = creds
       @upload_url = upload_url
@@ -100,7 +107,7 @@ module RedHatSupportLib::TelemetryApi
       subset_client = default_rest_client @subset_url, {
         :method => :post,
         payload: {
-          hash: get_hash(get_machines()),
+          hash: get_hash(get_machines),
           branch_id: get_branch_id,
           leaf_ids: get_machines
         }.to_json
@@ -110,7 +117,7 @@ module RedHatSupportLib::TelemetryApi
 
     # Transforms the URL that the user requested into the subsetted URL
     def build_subset_url url
-      url = "#{@subset_url}/#{get_hash get_machines}/#{url}"
+      url = "#{@subset_url}/#{get_hash(get_machines)}/#{url}"
       ldebug "build_subset_url #{url}"
       return url
     end

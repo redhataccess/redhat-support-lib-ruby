@@ -1,3 +1,5 @@
+require_relative '../network/http_request'
+
 module RedHatSupportLib::TelemetryApi
 
   SUBSETTED_RESOURCES = {
@@ -36,7 +38,6 @@ module RedHatSupportLib::TelemetryApi
     end
 
     def call_tapi original_method, resource, original_params, original_payload, extra, no_subset = false
-      RestClient.proxy = @http_proxy
       begin
         if SUBSETTED_RESOURCES.has_key?(resource) and not no_subset
           ldebug "Doing subset call to #{resource}"
@@ -60,8 +61,6 @@ module RedHatSupportLib::TelemetryApi
       rescue Exception => e
         lerror e, "Caught unexpected error when proxying call to tapi: #{e}"
         return { data: e, error: e, code: 500 }
-      ensure
-        RestClient.proxy = ""
       end
     end
 
@@ -150,6 +149,7 @@ module RedHatSupportLib::TelemetryApi
         :method   => :get,
         :url      => url,
       }
+      opts[:proxy] = @http_proxy unless @http_proxy.nil? || @http_proxy == ""
       opts = opts.merge(get_auth_opts(@creds))
       opts = opts.merge(override_options)
       if override_options[:params]
@@ -159,7 +159,8 @@ module RedHatSupportLib::TelemetryApi
       if override_options[:method] == :post and override_options[:payload]
         opts[:headers] = ensure_content_type(opts)
       end
-      RestClient::Request.new(opts)
+      ldebug("Rest client options are #{opts.to_json}")
+      RedHatSupportLib::Network::HttpRequest.new(opts)
     end
 
 

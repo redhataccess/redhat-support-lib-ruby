@@ -159,7 +159,6 @@ module RedHatSupportLib::TelemetryApi
       if override_options[:method] == :post and override_options[:payload]
         opts[:headers] = ensure_content_type(opts)
       end
-      ldebug("Rest client options are #{opts.to_json}")
       RedHatSupportLib::Network::HttpRequest.new(opts)
     end
 

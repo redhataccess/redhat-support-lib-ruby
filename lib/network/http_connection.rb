@@ -13,7 +13,7 @@ module RedHatSupportLib
         unless config.user_agent.nil?
           user_agent = config.user_agent
         end
-        @additional_headers = {:"user-agent" => user_agent}
+        @additional_headers = {:user_agent => user_agent}
         unless config.proxy_host.nil? || config.proxy_host.strip.empty?
           RestClient.proxy = "http://#{config.proxy_user}:#{config.proxy_password}@#{config.proxy_host}:#{config.proxy_port}"
         end

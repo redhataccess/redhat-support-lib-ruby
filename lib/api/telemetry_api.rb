@@ -24,7 +24,8 @@ module RedHatSupportLib::TelemetryApi
 
       if optional
         @logger = optional[:logger]
-        @http_proxy = optional[:http_proxy]
+        @http_proxy = optional[:http_proxy] if optional[:http_proxy]
+        @user_agent = optional[:user_agent] if optional[:user_agent]
       end
       ldebug ("HTTP proxy is set to #{@http_proxy}")
     end
@@ -158,6 +159,12 @@ module RedHatSupportLib::TelemetryApi
       end
       if override_options[:method] == :post and override_options[:payload]
         opts[:headers] = ensure_content_type(opts)
+      end
+      if not opts[:headers]
+        opts[:headers] = {}
+      end
+      if @user_agent 
+          opts[:headers] = opts[:headers].merge({:user_agent => @user_agent})
       end
       RedHatSupportLib::Network::HttpRequest.new(opts)
     end

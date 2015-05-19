@@ -63,6 +63,10 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Tue May 19 2015 Lindani Phiri <lindani@redhat.com> - 0.0.2-2
+- First tech preview  release of RHAI for QA testing
+- Resolves : bz1217726
+
 * Mon Apr 06 2015 Lindani Phiri <iphiri@redhat.com> - 0.0.2-1
 - Beta build for HTB customers
 

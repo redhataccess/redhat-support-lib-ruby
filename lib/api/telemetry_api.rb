@@ -4,7 +4,8 @@ module RedHatSupportLib::TelemetryApi
 
   SUBSETTED_RESOURCES = {
     "reports" => true,
-    "systems" => true
+    "systems" => true,
+    "systems/status" => true
   }
 
   class Client

@@ -6,7 +6,7 @@
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.0.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+

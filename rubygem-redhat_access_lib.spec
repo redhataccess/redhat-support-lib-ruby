@@ -5,8 +5,8 @@
 %global rubyabi 1.9.1
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.2
-Release: 2%{?dist}
+Version: 0.0.3
+Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
@@ -63,6 +63,10 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Fri May 29 2015 Lindani Phiri <lindani@redhat.com> - 0.0.3-1
+- Correct subset calls for telemetry system/status
+- Resolves : bz1217726
+
 * Tue May 19 2015 Lindani Phiri <lindani@redhat.com> - 0.0.2-2
 - First tech preview  release of RHAI for QA testing
 - Resolves : bz1217726

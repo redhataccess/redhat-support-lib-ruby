@@ -5,7 +5,7 @@
 %global rubyabi 1.9.1
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.3
+Version: 0.0.4
 Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages

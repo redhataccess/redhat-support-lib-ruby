@@ -16,6 +16,10 @@ module RedHatSupportLib
         super(args)
       end
 
+      def self.execute(args, & block)
+        new(args).execute(& block)
+      end
+
       # The proxy URI for this request. If `:proxy` was provided on this request,
       # use it over `RestClient.proxy`.
       #

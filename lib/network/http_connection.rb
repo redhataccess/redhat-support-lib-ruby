@@ -1,6 +1,9 @@
 require 'rest_client'
 require 'json'
 require "base64"
+require_relative './http_request'
+require_relative './http_resource'
+
 
 module RedHatSupportLib
   module Network
@@ -14,9 +17,9 @@ module RedHatSupportLib
           user_agent = config.user_agent
         end
         @additional_headers = {:user_agent => user_agent}
-        unless config.proxy_host.nil? || config.proxy_host.strip.empty?
-          RestClient.proxy = "http://#{config.proxy_user}:#{config.proxy_password}@#{config.proxy_host}:#{config.proxy_port}"
-        end
+        #unless config.proxy_host.nil? || config.proxy_host.strip.empty?
+        #  RestClient.proxy = "http://#{config.proxy_user}:#{config.proxy_password}@#{config.proxy_host}:#{config.proxy_port}"
+        #end
         unless config.log_location.nil?
           RestClient.log = config.log_location
         end
@@ -61,7 +64,7 @@ module RedHatSupportLib
 
       #upload a file as multipart
       def upload(relative_uri, file, headers={}, &block )
-        request = RestClient::Request.new(
+        request = RedHatSupportLib::Network::HttpRequest.new(
           :headers => headers,
           :method => :post,
           :url => "#{@config.base_uri}#{relative_uri}",
@@ -70,7 +73,9 @@ module RedHatSupportLib
           :payload => {
             :multipart => true,
             :file => file
-        })
+          },
+          :proxy => config.proxy
+        )
 
         result = request.execute
         if block
@@ -80,10 +85,10 @@ module RedHatSupportLib
 
       private
       def get_resource(relative_uri)
-
-        resource = RestClient::Resource.new("#{@config.base_uri}#{relative_uri}",
-                                            @config.username,
-                                            @config.password)
+        resource = RedHatSupportLib::Network::HttpResource.new("#{@config.base_uri}#{relative_uri}",
+                                            {:user => @config.username,
+                                             :password => @config.password,
+                                             :proxy => config.proxy})
       end
 
       def parse_response(body, format)
@@ -97,7 +102,7 @@ module RedHatSupportLib
 
     class Config
       attr_accessor :username, :password, :base_uri, :user_agent,
-        :proxy_user,:proxy_password, :proxy_host, :proxy_port, :log_location
+        :proxy, :log_location
     end
   end
 end

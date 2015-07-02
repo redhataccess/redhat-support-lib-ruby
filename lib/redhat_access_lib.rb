@@ -1,4 +1,5 @@
 require 'pp'
+require 'yaml'
 require_relative  'api/api'
 require_relative  'api/telemetry_api'
 
@@ -8,18 +9,16 @@ require_relative  'api/telemetry_api'
 # config.base_uri = 'https://api.access.redhat.com'
 # config.username=auth_config['username']
 # config.password = auth_config['password']
-# config.proxy_host= nil
-# config.proxy_port = '3128'
-# config.proxy_user= 'some_user'
-# config.proxy_password='some_pass'
+# config.proxy= 'http://user1:password@localhost:3128/'
 
-# #config.log_location = '/home/some_user/code/logs/restclient/support_lib.txt'
+
+# config.log_location = '/tmp/support_lib_log.txt'
 # attachments_config = {:max_http_size => 2048, :ftp_host => '192.168.122.1',:ftp_remote_dir =>"/incoming"}
 # access = RedHatSupportLib::Api::API.new(config,attachments_config)
 
 
-# # solutions = access.solution_broker.search('JBOSS+SAM', 50);
-# # pp solutions
+# solutions = access.solution_broker.search('JBOSS+SAM', 50);
+# pp solutions
 # # #Solutions tests
 # # if solutions
 # #   solutions.each do |solution|
@@ -101,10 +100,12 @@ require_relative  'api/telemetry_api'
 
 # #------------------Attachments-------------------------
 # #pp access.attachment_broker.list("01015184","2014-01-24","2014-01-24")
-# #attachment_list = access.attachments_broker.list("01010069",nil,nil,nil)
-# #pp attachment_list
-# attachments = access.attachment_broker.add("01010069",
+# attachment_list = access.attachment_broker.list("01465941",nil,nil,nil)
+# pp attachment_list
+# attachments = access.attachment_broker.add("01465941",
 #                                            false,
-#                                            "/tmp/tmpTO9nyN/sosreport-lindani-vm-foreman.01010069-20140402085558-d814.tar.xz",
-#                                            "description2")
+#                                             "/tmp/dummy.txt",
+#                                             "description2")
 # pp attachments
+# attachment_list = access.attachment_broker.list("01465941",nil,nil,nil)
+# pp attachment_list

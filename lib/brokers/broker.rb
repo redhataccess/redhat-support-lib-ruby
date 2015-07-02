@@ -1,7 +1,7 @@
 module  RedHatSupportLib
   module Brokers
     class Broker
-            attr_accessor :connection
+      attr_accessor :connection
       def initialize (connection)
         @connection = connection
       end

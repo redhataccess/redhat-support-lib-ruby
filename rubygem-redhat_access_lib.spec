@@ -63,6 +63,11 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+
+* Mon Jul 13 2015 Lindani Phiri <lindani@redhat.com> - 0.0.4-1
+- GA build for Access Insights
+- Resolves : bz1193202 
+
 * Fri May 29 2015 Lindani Phiri <lindani@redhat.com> - 0.0.3-1
 - Correct subset calls for telemetry system/status
 - Resolves : bz1217726

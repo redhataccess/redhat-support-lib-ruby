@@ -2,21 +2,19 @@
 %{!?scl:%global pkg_name %{name}}
 
 %global gem_name redhat_access_lib
-%global rubyabi 1.9.1
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.0.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
 URL: https://github.com/redhataccess/redhat-support-lib-ruby
 Source0: %{gem_name}-%{version}.gem
 
-Requires: %{?scl_prefix}ruby(abi)
+
 Requires: %{?scl_prefix}rubygems
 
-BuildRequires: %{?scl_prefix}ruby(abi)
 BuildRequires: %{?scl_prefix}rubygems-devel
 BuildRequires: %{?scl_prefix}rubygems
 
@@ -63,6 +61,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+
+* Mon Jul 13 2015 Lindani Phiri <lindani@redhat.com> - 0.0.4-2
+- Remove unnecessary rubyabi dependency
 
 * Mon Jul 13 2015 Lindani Phiri <lindani@redhat.com> - 0.0.4-1
 - GA build for Access Insights

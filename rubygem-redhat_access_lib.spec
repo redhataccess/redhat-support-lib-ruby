@@ -4,8 +4,8 @@
 %global gem_name redhat_access_lib
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.4
-Release: 2%{?dist}
+Version: 0.0.5
+Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
@@ -61,6 +61,10 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+
+
+* Fri Oct 2 2015 Lindani Phiri <lindani@redhat.com> - 0.0.5-1
+- Add support for machine-id subsets queries for RHAI
 
 * Mon Jul 13 2015 Lindani Phiri <lindani@redhat.com> - 0.0.4-2
 - Remove unnecessary rubyabi dependency

@@ -8,38 +8,65 @@ module RedHatSupportLib::TelemetryApi
     "systems/status" => true
   }
 
+
+  SUBSET_LIST_TYPE_KEY = :subset_list_type
+  SUBSET_LIST_TYPE_MACHINE_ID = :machine_ids
+  SUBSET_LIST_TYPE_LEAF_ID = :leaf_ids
+
   class Client
 
-    # RestClient.log =
-    # Object.new.tap do |proxy|
-    #   def proxy.<<(message)
-    #     Rails.logger.debug message
-    #   end
-    # end
+    RestClient.log =
+    Object.new.tap do |proxy|
+      def proxy.<<(message)
+        Rails.logger.debug message
+      end
+    end
 
-    def initialize upload_url, api_url, creds, optional
+    def initialize (upload_url,
+                    api_url,
+                    creds,
+                    optional)
+
       @creds      = creds
       @upload_url = upload_url
       @api_url    = api_url
       @subset_url = "#{@api_url}/subsets"
+      @subset_list_type = SUBSET_LIST_TYPE_LEAF_ID
 
       if optional
         @logger = optional[:logger]
         @http_proxy = optional[:http_proxy] if optional[:http_proxy]
         @user_agent = optional[:user_agent] if optional[:user_agent]
+        @subset_list_type = optional[SUBSET_LIST_TYPE_KEY] if optional[SUBSET_LIST_TYPE_KEY]
       end
       ldebug ("HTTP proxy is set to #{@http_proxy}")
     end
 
-    def post_upload original_params, original_payload
-      call_tapi 'POST', '/', original_params, original_payload, { do_upload: true }
+    def post_upload (original_params,
+                     original_payload)
+
+      call_tapi('POST',
+                '/',
+                original_params,
+                original_payload,
+                { do_upload: true })
     end
 
-    def call_tapi_no_subset original_method, resource, original_params, original_payload, extra
-      call_tapi original_method, resource, original_params, original_payload, extra, true
+    def call_tapi_no_subset (original_method,
+                             resource,
+                             original_params,
+                             original_payload,
+                             extra)
+
+      ldebug ("Called no subset proxy")
+      call_tapi(original_method, resource, original_params, original_payload, extra, true)
     end
 
-    def call_tapi original_method, resource, original_params, original_payload, extra, no_subset = false
+    def call_tapi (original_method,
+                   resource,
+                   original_params,
+                   original_payload,
+                   extra, no_subset = false)
       begin
         if SUBSETTED_RESOURCES.has_key?(resource) and not no_subset
           ldebug "Doing subset call to #{resource}"
@@ -52,7 +79,7 @@ module RedHatSupportLib::TelemetryApi
             url = "#{@api_url}/#{resource}"
           end
 
-          ldebug "Doing non subset call to #{url}"
+          ldebug "Doing non subset call--- to #{url}"
           client = default_rest_client(url, { params: original_params, method: original_method, payload: original_payload })
           response = client.execute
           return { data: response, code: response.code }
@@ -68,22 +95,24 @@ module RedHatSupportLib::TelemetryApi
 
     private
 
-    def ldebug message
+    def ldebug(message)
       if @logger
         @logger.debug "#{self.class.name}: #{message}"
       end
     end
 
-    def lerror e, message
+    def lerror (e,
+                message)
       if @logger
-        @logger.error "#{self.class.name}: #{message}"
+        @logger.error ("#{self.class.name}: #{message}")
         if e
-          @logger.error e.backtrace.join("\n")
+          @logger.error (e.backtrace.join("\n"))
         end
       end
     end
 
-    def do_subset_call resource, conf
+    def do_subset_call (resource,
+                        conf)
       ldebug "Doing subset call"
       # Try subset
       begin
@@ -115,7 +144,7 @@ module RedHatSupportLib::TelemetryApi
         payload: {
           hash: get_hash(get_machines),
           branch_id: get_branch_id,
-          leaf_ids: get_machines
+          @subset_list_type => get_machines
         }.to_json
       }
       response = subset_client.execute
@@ -164,10 +193,10 @@ module RedHatSupportLib::TelemetryApi
       if not opts[:headers]
         opts[:headers] = {}
       end
-      if @user_agent 
-          opts[:headers] = opts[:headers].merge({:user_agent => @user_agent})
+      if @user_agent
+        opts[:headers] = opts[:headers].merge({:user_agent => @user_agent})
       end
-      RedHatSupportLib::Network::HttpRequest.new(opts)
+      RestClient::Request.new(opts)
     end
 
 
@@ -180,5 +209,4 @@ module RedHatSupportLib::TelemetryApi
       end
     end
   end
-
 end

@@ -78,8 +78,6 @@ module RedHatSupportLib::TelemetryApi
           else
             url = "#{@api_url}/#{resource}"
           end
-
-          ldebug "Doing non subset call--- to #{url}"
           client = default_rest_client(url, { params: original_params, method: original_method, payload: original_payload })
           response = client.execute
           return { data: response, code: response.code }
@@ -175,7 +173,6 @@ module RedHatSupportLib::TelemetryApi
     end
 
     def default_rest_client(url, override_options)
-
       opts = {
         :method   => :get,
         :url      => url,
@@ -187,26 +184,14 @@ module RedHatSupportLib::TelemetryApi
         opts[:url] = "#{url}?#{override_options[:params].to_query}"
         override_options.delete(:params)
       end
-      if override_options[:method] == :post and override_options[:payload]
-        opts[:headers] = ensure_content_type(opts)
-      end
       if not opts[:headers]
         opts[:headers] = {}
       end
+      opts[:headers] = opts[:headers].merge({'content-type' => 'application/json', 'accept' => 'application/json'})
       if @user_agent
-        opts[:headers] = opts[:headers].merge({:user_agent => @user_agent})
+          opts[:headers] = opts[:headers].merge({:user_agent => @user_agent})
       end
-      RestClient::Request.new(opts)
-    end
-
-
-    def ensure_content_type(opts)
-      # TODO we should probably not force here.
-      # I would rather throw an exception if nothing is provided
-      # Or even just let it POST w/o anything and have upstream fail
-      if not opts[:headers]
-        return opts[:headers] = {'content-type' => 'application/json', 'accept' => 'application/json'}
-      end
+      RedHatSupportLib::Network::HttpRequest.new(opts)
     end
   end
 end

@@ -13,10 +13,10 @@ URL: https://github.com/redhataccess/redhat-support-lib-ruby
 Source0: %{gem_name}-%{version}.gem
 
 
-Requires: %{?scl_prefix}rubygems
+Requires: %{?scl_prefix_ruby}ruby(rubygems)
 
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}ruby(rubygems)
 
 BuildArch: noarch
 

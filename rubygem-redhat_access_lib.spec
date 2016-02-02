@@ -4,7 +4,7 @@
 %global gem_name redhat_access_lib
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.6
+Version: 1.0.0
 Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
@@ -61,6 +61,11 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+
+* Tue Feb 02 2016 Lindani Phiri <lindani@redhat.com> - 1.0.0-1
+- Resolves 1297523
+- Resolves 1293463
+
 * Wed Nov 11 2015 Lindani Phiri <lindani@redhat.com> - 0.0.6-1
 - Fix proxy Bug  BZ 1282576
 - Set content type correctly for telemetry Proxy

@@ -62,6 +62,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 %changelog
 
+* Tue Feb 23 2016 Lindani Phiri <lindani@redhat.com> - 1.0.1-1
+- Resolves 1306850
+
 * Tue Feb 02 2016 Lindani Phiri <lindani@redhat.com> - 1.0.0-1
 - Resolves 1297523
 - Resolves 1293463

@@ -61,6 +61,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Tue Feb 23 2016 Lindani Phiri <lindani@redhat.com> - 0.2.5-1
+- Resolves : bz1306847
+
 * Wed Nov 11 2015 Lindani Phiri <lindani@redhat.com> - 0.0.6-1
 - Fix proxy Bug  BZ 1282576
 - Set content type correctly for telemetry Proxy

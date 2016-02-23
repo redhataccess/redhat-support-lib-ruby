@@ -1,5 +1,5 @@
 require 'open-uri'
-module  RedHatSupportLib
+module RedHatSupportLib
   module Brokers
     class Solution < Broker
       def initialize(connection)

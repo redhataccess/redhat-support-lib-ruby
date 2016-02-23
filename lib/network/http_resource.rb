@@ -45,59 +45,59 @@ module RedHatSupportLib
         if options.class == Hash
           @options = options
         else # compatibility with previous versions
-          @options = { :user => options, :password => backwards_compatibility }
+          @options = {:user => options, :password => backwards_compatibility}
         end
       end
 
       def get(additional_headers={}, &block)
         headers = (options[:headers] || {}).merge(additional_headers)
         HttpRequest.execute(options.merge(
-                          :method => :get,
-                          :url => url,
-        :headers => headers), &(block || @block))
+            :method => :get,
+            :url => url,
+            :headers => headers), &(block || @block))
       end
 
       def head(additional_headers={}, &block)
         headers = (options[:headers] || {}).merge(additional_headers)
         HttpRequest.execute(options.merge(
-                          :method => :head,
-                          :url => url,
-        :headers => headers), &(block || @block))
+            :method => :head,
+            :url => url,
+            :headers => headers), &(block || @block))
       end
 
       def post(payload, additional_headers={}, &block)
         headers = (options[:headers] || {}).merge(additional_headers)
         HttpRequest.execute(options.merge(
-                          :method => :post,
-                          :url => url,
-                          :payload => payload,
-        :headers => headers), &(block || @block))
+            :method => :post,
+            :url => url,
+            :payload => payload,
+            :headers => headers), &(block || @block))
       end
 
       def put(payload, additional_headers={}, &block)
         headers = (options[:headers] || {}).merge(additional_headers)
         HttpRequest.execute(options.merge(
-                          :method => :put,
-                          :url => url,
-                          :payload => payload,
-        :headers => headers), &(block || @block))
+            :method => :put,
+            :url => url,
+            :payload => payload,
+            :headers => headers), &(block || @block))
       end
 
       def patch(payload, additional_headers={}, &block)
         headers = (options[:headers] || {}).merge(additional_headers)
         HttpRequest.execute(options.merge(
-                          :method => :patch,
-                          :url => url,
-                          :payload => payload,
-        :headers => headers), &(block || @block))
+            :method => :patch,
+            :url => url,
+            :payload => payload,
+            :headers => headers), &(block || @block))
       end
 
       def delete(additional_headers={}, &block)
         headers = (options[:headers] || {}).merge(additional_headers)
         HttpRequest.execute(options.merge(
-                          :method => :delete,
-                          :url => url,
-        :headers => headers), &(block || @block))
+            :method => :delete,
+            :url => url,
+            :headers => headers), &(block || @block))
       end
 
       def to_s
@@ -152,10 +152,12 @@ module RedHatSupportLib
       #
       def [](suburl, &new_block)
         case
-        when block_given? then self.class.new(concat_urls(url, suburl), options, &new_block)
-        when block        then self.class.new(concat_urls(url, suburl), options, &block)
-        else
-          self.class.new(concat_urls(url, suburl), options)
+          when block_given? then
+            self.class.new(concat_urls(url, suburl), options, &new_block)
+          when block then
+            self.class.new(concat_urls(url, suburl), options, &block)
+          else
+            self.class.new(concat_urls(url, suburl), options)
         end
       end
 

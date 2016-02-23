@@ -1,7 +1,7 @@
 require 'pp'
 require 'yaml'
-require_relative  'api/api'
-require_relative  'api/telemetry_api'
+require_relative 'api/api'
+require_relative 'api/telemetry_api'
 
 
 # auth_config = YAML::load(File.read(File.join(ENV['HOME'], 'portal-auth.yml')))

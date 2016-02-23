@@ -1,7 +1,7 @@
 require 'pathname'
 require_relative '../network/ftp_connection'
 
-module  RedHatSupportLib
+module RedHatSupportLib
   module Brokers
     class Attachment < Broker
 
@@ -29,7 +29,7 @@ module  RedHatSupportLib
       end
 
 
-      def get(case_number, attachment_uuid,file_name, dest_dir)
+      def get(case_number, attachment_uuid, file_name, dest_dir)
         #TODO
 
       end
@@ -40,14 +40,14 @@ module  RedHatSupportLib
         result = @connection.delete(uri)
       end
 
-      def add(case_number, is_public, file_name,description)
+      def add(case_number, is_public, file_name, description)
         #puts "Sending attachment for case "+ case_number
         attachment_id = nil
         File.open(file_name) do |file|
           if file.size < @attachments_config[:max_http_size]
             headers = {:description => description}
             @connection.upload("/rs/cases/#{case_number}/attachments",
-            file, headers) do |code,headers|
+                               file, headers) do |code, headers|
               if code == 201
                 location = headers[:location]
                 attachment_id = get_id(location)
@@ -71,7 +71,7 @@ module  RedHatSupportLib
         attachment_id
       end
 
-      def  get_id(uri)
+      def get_id(uri)
         parts = uri.split("/")
         parts.pop
       end

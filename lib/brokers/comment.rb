@@ -1,5 +1,4 @@
-
-module  RedHatSupportLib
+module RedHatSupportLib
   module Brokers
     class Comment < Broker
       def initialize(connection)
@@ -33,7 +32,7 @@ module  RedHatSupportLib
       def add(text, case_number, is_draft, is_public=true)
         headers = {:content_type => 'application/xml'}
         data = create_comment(text, case_number, is_draft, is_public)
-        result = @connection.post("/rs/cases/#{case_number}/comments", data, headers) do |code,headers|
+        result = @connection.post("/rs/cases/#{case_number}/comments", data, headers) do |code, headers|
           if code == 201
             location = headers[:location]
             return get_id(location)
@@ -61,7 +60,7 @@ module  RedHatSupportLib
         filter.string
       end
 
-      def  get_id(uri)
+      def get_id(uri)
         parts = uri.split("/")
         parts.pop
       end

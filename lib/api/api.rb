@@ -18,6 +18,7 @@ module RedHatSupportLib
       attr_reader :article_broker, :case_broker, :solution_broker
       attr_reader :symptom_broker, :problem_broker, :attachment_broker
       attr_reader :product_broker, :group_broker, :entitlement_broker, :comment_broker
+
       def initialize(network_config, attachments_config)
         @connection = Network::HttpConnection.new(network_config)
         @article_broker = Brokers::Article.new(@connection)
@@ -26,7 +27,7 @@ module RedHatSupportLib
         @symptom_broker = Brokers::Symptom.new(@connection)
         @problem_broker = Brokers::Problem.new(@connection)
         @comment_broker = Brokers::Comment.new(@connection)
-        @attachment_broker = Brokers::Attachment.new(@connection,@comment_broker,attachments_config)
+        @attachment_broker = Brokers::Attachment.new(@connection, @comment_broker, attachments_config)
         @product_broker = Brokers::Product.new(@connection)
         @group_broker = Brokers::Group.new(@connection)
         @entitlement_broker = Brokers::Entitlement.new(@connection)

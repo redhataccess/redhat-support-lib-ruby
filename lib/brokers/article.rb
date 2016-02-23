@@ -1,12 +1,12 @@
 require 'open-uri'
-module  RedHatSupportLib
-	module Brokers
-		class Article < Broker
+module RedHatSupportLib
+  module Brokers
+    class Article < Broker
       def initialize(connection)
         super
       end
-      
-			def search(text, limit=10)
+
+      def search(text, limit=10)
         #TODO encode input and error handling
         text = URI::encode(text)
         result = @connection.get("/rs/articles?keyword=#{text}&limit=#{limit}", {:accept => :json})
@@ -19,6 +19,6 @@ module  RedHatSupportLib
         #result.parsed_response
       end
 
-		end
-	end
+    end
+  end
 end

@@ -2,9 +2,9 @@ require_relative '../network/http_request'
 
 module RedHatSupportLib::TelemetryApi
   SUBSETTED_RESOURCES = {
-    'reports' => true,
-    'systems' => true,
-    'systems/status' => true
+      'reports' => true,
+      'systems' => true,
+      'systems/status' => true
   }
 
   SUBSET_LIST_TYPE_KEY = :subset_list_type
@@ -12,21 +12,20 @@ module RedHatSupportLib::TelemetryApi
   SUBSET_LIST_TYPE_LEAF_ID = :leaf_ids
 
   class Client
-    RestClient.log =
-      Object.new.tap do |proxy|
-        def proxy.<<(message)
-          Rails.logger.debug message
-        end
+    RestClient.log =Object.new.tap do |proxy|
+      def proxy.<<(message)
+        Rails.logger.debug message
       end
+    end
 
     def initialize(upload_url,
-                    api_url,
-                    creds,
-                    optional)
+                   api_url,
+                   creds,
+                   optional)
 
-      @creds      = creds
+      @creds = creds
       @upload_url = upload_url
-      @api_url    = api_url
+      @api_url = api_url
       @subset_url = "#{@api_url}/subsets"
       @subset_list_type = SUBSET_LIST_TYPE_LEAF_ID
 
@@ -41,7 +40,7 @@ module RedHatSupportLib::TelemetryApi
     end
 
     def post_upload(original_params,
-                     original_payload)
+                    original_payload)
 
       call_tapi('POST',
                 '/',
@@ -51,25 +50,25 @@ module RedHatSupportLib::TelemetryApi
     end
 
     def call_tapi_no_subset(original_method,
-                             resource,
-                             original_params,
-                             original_payload,
-                             extra)
+                            resource,
+                            original_params,
+                            original_payload,
+                            extra)
 
       ldebug ('Called no subset proxy')
       call_tapi(original_method, resource, original_params, original_payload, extra, true)
     end
 
     def call_tapi(original_method,
-                   resource,
-                   original_params,
-                   original_payload,
-                   extra, no_subset = false)
+                  resource,
+                  original_params,
+                  original_payload,
+                  extra, no_subset = false)
 
       if SUBSETTED_RESOURCES.key?(resource) && !no_subset
         ldebug "Doing subset call to #{resource}"
         response = do_subset_call(resource, params: original_params, method: original_method, payload: original_payload)
-        return { data: response, code: response.code }
+        return {data: response, code: response.code}
       else
         if extra && extra[:do_upload]
           url = @upload_url
@@ -78,32 +77,32 @@ module RedHatSupportLib::TelemetryApi
         end
         client = default_rest_client(url, params: original_params, method: original_method, payload: original_payload)
         response = client.execute
-        return { data: response, code: response.code }
+        return {data: response, code: response.code}
       end
     rescue RestClient::ExceptionWithResponse => e
       lerror nil, "Caught HTTP error when proxying call to tapi: #{e}"
-      return { data: e.response, error: e, code: e.response.code }
+      return {data: e.response, error: e, code: e.response.code}
     rescue Exception => e
       lerror e, "Caught unexpected error when proxying call to tapi: #{e}"
-      return { data: e, error: e, code: 500 }
+      return {data: e, error: e, code: 500}
     end
 
     def call_strata(original_method,
-                   resource,
-                   original_params,
-                   original_payload,
-                   _extra)
+                    resource,
+                    original_params,
+                    original_payload,
+                    _extra)
 
       url = "#{@api_url}/#{resource}"
       client = default_rest_client(url, params: original_params, method: original_method, payload: original_payload)
       response = client.execute
-      return { data: response, code: response.code }
+      return {data: response, code: response.code}
     rescue RestClient::ExceptionWithResponse => e
       lerror nil, "Caught HTTP error when proxying call to tapi: #{e}"
-      return { data: e.response, error: e, code: e.response.code }
+      return {data: e.response, error: e, code: e.response.code}
     rescue Exception => e
       lerror e, "Caught unexpected error when proxying call to tapi: #{e}"
-      return { data: e, error: e, code: 500 }
+      return {data: e, error: e, code: 500}
     end
 
     private
@@ -113,7 +112,7 @@ module RedHatSupportLib::TelemetryApi
     end
 
     def lerror(e,
-                message)
+               message)
       if @logger
         @logger.error ("#{self.class.name}: #{message}")
         @logger.error (e.backtrace.join("\n")) if e
@@ -121,7 +120,7 @@ module RedHatSupportLib::TelemetryApi
     end
 
     def do_subset_call(resource,
-                        conf)
+                       conf)
       ldebug 'Doing subset call'
       # Try subset
       begin
@@ -133,7 +132,7 @@ module RedHatSupportLib::TelemetryApi
         return response
       rescue RestClient::ExceptionWithResponse => e
 
-        if  e.response && e.response.code == 412
+        if e.response && e.response.code == 412
           create_subset
 
           # retry the original request
@@ -148,12 +147,13 @@ module RedHatSupportLib::TelemetryApi
 
     def create_subset
       ldebug 'First subset call failed, CACHE_MISS'
-      subset_client = default_rest_client @subset_url,         method: :post,
-                                                               payload: {
-                                                                 hash: get_hash(get_machines),
-                                                                 branch_id: get_branch_id,
-                                                                 @subset_list_type => get_machines
-                                                               }.to_json
+      subset_client = default_rest_client(@subset_url,
+                                          method: :post,
+                                          payload: {
+                                              hash: get_hash(get_machines),
+                                              branch_id: get_branch_id,
+                                              @subset_list_type => get_machines
+                                          }.to_json)
       response = subset_client.execute
     end
 
@@ -168,14 +168,14 @@ module RedHatSupportLib::TelemetryApi
     # Returns the machines hash used for /subset/$hash/
     def get_hash(machines)
       branch = get_branch_id
-      hash   = Digest::SHA1.hexdigest(machines.join)
+      hash = Digest::SHA1.hexdigest(machines.join)
       "#{branch}__#{hash}"
     end
 
     def default_rest_client(url, override_options)
       opts = {
-        method: :get,
-        url: url
+          method: :get,
+          url: url
       }
       opts[:proxy] = @http_proxy unless @http_proxy.nil? || @http_proxy == ''
       opts = opts.merge(get_auth_opts(@creds))

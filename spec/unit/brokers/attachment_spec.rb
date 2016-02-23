@@ -3,7 +3,7 @@ require 'brokers/attachment'
 
 describe "Attachment Broker Interface" do
   before do
-    @broker = RedHatSupportLib::Brokers::Attachment.new(nil,nil,nil)
+    @broker = RedHatSupportLib::Brokers::Attachment.new(nil, nil, nil)
   end
   it "has a method for searching " do
     @broker.must_respond_to(:list)

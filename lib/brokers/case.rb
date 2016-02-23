@@ -1,4 +1,4 @@
-module  RedHatSupportLib
+module RedHatSupportLib
   module Brokers
     class Case < Broker
       def initialize(connection)
@@ -7,14 +7,14 @@ module  RedHatSupportLib
 
       def list(keywords, include_closed, detail, group, start_date, end_date,
                count, start, kwargs)
-        headers = {:content_type => 'application/xml',:accept => :json }
+        headers = {:content_type => 'application/xml', :accept => :json}
         param =""
         if detail
           param = "?detail=true"
         end
         filter = self.create_filter(keywords, include_closed,
                                     group, start_date,
-                                    end_date,count, start,
+                                    end_date, count, start,
                                     @connection.config.username)
         result = @connection.post("/rs/cases/filter#{param}", filter, headers)
 
@@ -45,33 +45,33 @@ module  RedHatSupportLib
         data = StringIO.new
         data << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
         data << "<tns:case xmlns:tns=\"http://www.redhat.com/gss/strata\"> "
-        data << "<tns:summary>#{summary}</tns:summary>"  
+        data << "<tns:summary>#{summary}</tns:summary>"
         data << "<tns:description>#{description}</tns:description>"
         data << "<tns:product>#{product}</tns:product>"
-        data << "<tns:version>#{version}</tns:version>"   
+        data << "<tns:version>#{version}</tns:version>"
         data << "<tns:severity>#{severity}</tns:severity>"
         if folder_number
           data << "<tns:folderNumber>#{folder_number}</tns:folderNumber>"
         end
         data << "</tns:case>"
-        result = @connection.post("/rs/cases", data.string, headers) do |code,headers|
+        result = @connection.post("/rs/cases", data.string, headers) do |code, headers|
           if code == 201
-            return get_id(headers[:location])     
+            return get_id(headers[:location])
           end
         end
       end
 
-      def update(case_number, product, version, alternate_id, status,severity,type)
+      def update(case_number, product, version, alternate_id, status, severity, type)
         headers = {:content_type => 'application/xml'}
-        data = create_update_data( product, version, alternate_id, status,severity,type)
-        result = @connection. put("/rs/cases/#{case_number}", data, headers) do |code,headers|
+        data = create_update_data(product, version, alternate_id, status, severity, type)
+        result = @connection.put("/rs/cases/#{case_number}", data, headers) do |code, headers|
           if code == 202
             return get case_number
           end
         end
       end
 
-      def create_update_data(product, version, alternate_id, status,severity,type)
+      def create_update_data(product, version, alternate_id, status, severity, type)
         #for now use xml version
         data = StringIO.new
         data << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
@@ -99,7 +99,7 @@ module  RedHatSupportLib
         return data.string
       end
 
-      def create_filter(keywords, include_closed,group, start_date, end_date,
+      def create_filter(keywords, include_closed, group, start_date, end_date,
                         count, start, owner_sso_name)
         #for now use xml version
         filter = StringIO.new
@@ -135,7 +135,7 @@ module  RedHatSupportLib
         filter.string
       end
 
-      
+
     end
     # class CaseFilter
     #   attr_accessor :keywords, :include_closed, :detail,

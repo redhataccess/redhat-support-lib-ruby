@@ -10,6 +10,7 @@ module RedHatSupportLib
     class HttpConnection
       USER_AGENT = "ruby-rest-client"
       attr_reader :config
+
       def initialize(config)
         @config = config
         user_agent = USER_AGENT
@@ -53,7 +54,7 @@ module RedHatSupportLib
         parse_response(result.body, headers[:accept])
       end
 
-      def delete(relative_uri, headers={}, &block )
+      def delete(relative_uri, headers={}, &block)
 
         hdr = @additional_headers.merge!(headers)
         result = get_resource(relative_uri).delete hdr
@@ -63,18 +64,18 @@ module RedHatSupportLib
       end
 
       #upload a file as multipart
-      def upload(relative_uri, file, headers={}, &block )
+      def upload(relative_uri, file, headers={}, &block)
         request = RedHatSupportLib::Network::HttpRequest.new(
-          :headers => headers,
-          :method => :post,
-          :url => "#{@config.base_uri}#{relative_uri}",
-          :user => @config.username,
-          :password => @config.password,
-          :payload => {
-            :multipart => true,
-            :file => file
-          },
-          :proxy => config.proxy
+            :headers => headers,
+            :method => :post,
+            :url => "#{@config.base_uri}#{relative_uri}",
+            :user => @config.username,
+            :password => @config.password,
+            :payload => {
+                :multipart => true,
+                :file => file
+            },
+            :proxy => config.proxy
         )
 
         result = request.execute
@@ -86,9 +87,9 @@ module RedHatSupportLib
       private
       def get_resource(relative_uri)
         resource = RedHatSupportLib::Network::HttpResource.new("#{@config.base_uri}#{relative_uri}",
-                                            {:user => @config.username,
-                                             :password => @config.password,
-                                             :proxy => config.proxy})
+                                                               {:user => @config.username,
+                                                                :password => @config.password,
+                                                                :proxy => config.proxy})
       end
 
       def parse_response(body, format)
@@ -96,13 +97,13 @@ module RedHatSupportLib
         if (format == :json)
           return JSON.parse(body)
         end
-        body  # for now do nothing for other formats
+        body # for now do nothing for other formats
       end
     end
 
     class Config
       attr_accessor :username, :password, :base_uri, :user_agent,
-        :proxy, :log_location
+                    :proxy, :log_location
     end
   end
 end

@@ -42,7 +42,7 @@ module RedHatSupportLib
       def net_http_class
         p_uri = proxy_uri
         if p_uri
-          Net::HTTP::Proxy(p_uri.hostname, p_uri.port, p_uri.user, p_uri.password)
+          Net::HTTP::Proxy(URI.decode(p_uri.hostname),p_uri.port, URI.decode(p_uri.user), URI.decode(p_uri.password))
         else
           Net::HTTP
         end

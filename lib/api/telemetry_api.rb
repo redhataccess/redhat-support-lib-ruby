@@ -1,15 +1,17 @@
 require_relative '../network/http_request'
 
 module RedHatSupportLib::TelemetryApi
-  SUBSETTED_RESOURCES = {
-      'reports' => true,
-      'systems' => true,
-      'systems/status' => true
-  }
 
   SUBSET_LIST_TYPE_KEY = :subset_list_type
   SUBSET_LIST_TYPE_MACHINE_ID = :machine_ids
   SUBSET_LIST_TYPE_LEAF_ID = :leaf_ids
+  SUBSET_ROUTE_REGEX = [/^(v[0-9]|latest)\/systems\/status$/,
+                        /^systems\/status$/,
+                        /^(v[0-9]|latest)\/systems$/,
+                        /^systems$/,
+                        /^(v[0-9]|latest)\/reports$/,
+                        /^reports$/].freeze
+
 
   class Client
     RestClient.log =Object.new.tap do |proxy|
@@ -17,6 +19,29 @@ module RedHatSupportLib::TelemetryApi
         Rails.logger.debug message
       end
     end
+
+    #
+    #  Creates and returns the subset route corresponding to 'path' if 'path' is a subset resource, otherwise
+    #  returns 'nil'
+    #
+    def create_subset_route(path)
+      SUBSET_ROUTE_REGEX.each do |regex|
+        if regex.match(path)
+          subset_id = get_hash(get_machines)
+          path.gsub(regex) do |s|
+            api_version = Regexp.last_match[1]
+            if api_version
+              path = s.sub(api_version, "#{api_version}/subsets/#{subset_id}")
+            else
+              path = "subsets/#{subset_id}/#{s}"
+            end
+          end
+          return path
+        end
+      end
+      nil
+    end
+
 
     def initialize(upload_url,
                    api_url,
@@ -65,9 +90,9 @@ module RedHatSupportLib::TelemetryApi
                   original_payload,
                   extra, no_subset = false)
 
-      if SUBSETTED_RESOURCES.key?(resource) && !no_subset
-        ldebug "Doing subset call to #{resource}"
-        response = do_subset_call(resource, params: original_params, method: original_method, payload: original_payload)
+      if (subset_resource = create_subset_route(resource)) && !no_subset
+        ldebug "Doing subset call to #{subset_resource} (was : #{resource})"
+        response = do_subset_call("#{@api_url}/#{subset_resource}", params: original_params, method: original_method, payload: original_payload)
         return {data: response, code: response.code}
       else
         if extra && extra[:do_upload]
@@ -105,6 +130,21 @@ module RedHatSupportLib::TelemetryApi
       return {data: e, error: e, code: 500}
     end
 
+    def get_machines
+      throw NotImplementedError
+    end
+
+    def get_branch_id
+      throw NotImplementedError
+    end
+
+    # Returns the machines hash used for /subset/$hash/
+    def get_hash(machines)
+      branch = get_branch_id
+      hash = Digest::SHA1.hexdigest(machines.join)
+      "#{branch}__#{hash}"
+    end
+
     private
 
     def ldebug(message)
@@ -124,9 +164,8 @@ module RedHatSupportLib::TelemetryApi
       ldebug 'Doing subset call'
       # Try subset
       begin
-        url = build_subset_url(resource)
-        ldebug "url: #{url}"
-        client = default_rest_client url, conf
+        ldebug "url: #{resource}"
+        client = default_rest_client resource, conf
         response = client.execute
         ldebug 'First subset call passed, CACHE_HIT'
         return response
@@ -145,6 +184,8 @@ module RedHatSupportLib::TelemetryApi
       end
     end
 
+
+
     def create_subset
       ldebug 'First subset call failed, CACHE_MISS'
       subset_client = default_rest_client(@subset_url,
@@ -154,23 +195,11 @@ module RedHatSupportLib::TelemetryApi
                                               branch_id: get_branch_id,
                                               @subset_list_type => get_machines
                                           }.to_json)
-      response = subset_client.execute
-    end
-
-    # Transforms the URL that the user requested into the subsetted URL
-    def build_subset_url(url)
-      url = "#{@subset_url}/#{get_hash(get_machines)}/#{url}"
-      ldebug "build_subset_url #{url}"
-      url
+      subset_client.execute
     end
 
 
-    # Returns the machines hash used for /subset/$hash/
-    def get_hash(machines)
-      branch = get_branch_id
-      hash = Digest::SHA1.hexdigest(machines.join)
-      "#{branch}__#{hash}"
-    end
+
 
     def default_rest_client(url, override_options)
       opts = {

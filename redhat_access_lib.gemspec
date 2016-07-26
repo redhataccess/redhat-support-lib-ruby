@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage ='http://rubygems.org/gems/redhat_support_lib'
   s.license = 'MIT'
 
-  s.add_runtime_dependency 'rest-client'
+  s.add_runtime_dependency 'rest-client', '~> 1.6', '>= 1.6.3'
   s.add_development_dependency 'rake'
 
 end

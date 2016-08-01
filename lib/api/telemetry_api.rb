@@ -81,16 +81,16 @@ module RedHatSupportLib::TelemetryApi
                             extra)
 
       ldebug ('Called no subset proxy')
-      call_tapi(original_method, resource, original_params, original_payload, extra, true)
+      call_tapi(original_method, resource, original_params, original_payload, extra, false)
     end
 
     def call_tapi(original_method,
                   resource,
                   original_params,
                   original_payload,
-                  extra, no_subset = false)
+                  extra, use_subsets = true)
 
-      if (subset_resource = create_subset_route(resource)) && !no_subset
+      if (use_subsets && subset_resource = create_subset_route(resource))
         ldebug "Doing subset call to #{subset_resource} (was : #{resource})"
         response = do_subset_call("#{@api_url}/#{subset_resource}", params: original_params, method: original_method, payload: original_payload)
         return {data: response, code: response.code}

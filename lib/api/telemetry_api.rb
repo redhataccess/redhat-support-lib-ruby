@@ -153,8 +153,7 @@ module RedHatSupportLib::TelemetryApi
       @logger.debug "#{self.class.name}: #{message}" if @logger
     end
 
-    def lerror(e,
-               message)
+    def lerror(e, message)
       if @logger
         @logger.error ("#{self.class.name}: #{message}")
         @logger.error (e.backtrace.join("\n")) if e
@@ -170,6 +169,7 @@ module RedHatSupportLib::TelemetryApi
         client = default_rest_client resource, conf
         response = client.execute
         ldebug 'First subset call passed, CACHE_HIT'
+        ldebug(response.headers)
         return response
       rescue RestClient::ExceptionWithResponse => e
 
@@ -187,7 +187,6 @@ module RedHatSupportLib::TelemetryApi
     end
 
 
-
     def create_subset
       ldebug 'First subset call failed, CACHE_MISS'
       subset_client = default_rest_client(@subset_url,
@@ -199,8 +198,6 @@ module RedHatSupportLib::TelemetryApi
                                           }.to_json)
       subset_client.execute
     end
-
-
 
 
     def default_rest_client(url, override_options)

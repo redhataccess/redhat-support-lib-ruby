@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'redhat_access_lib'
-  s.version = '1.0.3'
+  s.version = '1.0.4'
   s.date = '2015-03-11'
   s.summary = "Rest Client for accessing Red Hat Support"
   s.description = "Rest Client for accessing Red Hat Support"

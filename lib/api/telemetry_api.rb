@@ -9,8 +9,8 @@ module RedHatSupportLib::TelemetryApi
                         /^systems\/status$/,
                         /^(v[0-9]|latest)\/systems$/,
                         /^systems$/,
-                       # /^(v[0-9]|latest)\/rules$/,
-                       # /^rules$/,
+                        /^(v[0-9]|latest)\/rules$/,
+                        /^rules$/,
                         /^(v[0-9]|latest)\/reports$/,
                         /^reports$/].freeze
 

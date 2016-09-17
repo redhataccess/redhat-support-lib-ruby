@@ -4,7 +4,7 @@
 %global gem_name redhat_access_lib
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 1.0.4
+Version: 1.0.5
 Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
@@ -61,6 +61,10 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+
+
+* Sat Sep 17 2016 Lindani Phiri <lindani@redhat.com> - 1.0.5-1
+- BZ 1377025
 
 * Thu Aug 18 2016 Lindani Phiri <lindani@redhat.com> - 1.0.4-1
 - BZ 1362187

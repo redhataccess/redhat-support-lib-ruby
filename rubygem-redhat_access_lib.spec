@@ -10,7 +10,7 @@ Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
 URL: https://github.com/redhataccess/redhat-support-lib-ruby
-Source0: %{gem_name}-%{version}.gem
+Source0: https://rubygems.org/downloads/%{gem_name}-%{version}.gem
 
 
 Requires: %{?scl_prefix_ruby}ruby(rubygems)

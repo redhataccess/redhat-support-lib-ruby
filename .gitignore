@@ -1,8 +1,11 @@
 redhat_access_lib-*.gem
+build/*
+.idea/*
+Gemfile.lock
+
 
 # emacs ignores
 *[#]*[#]
 *[#]*
 *~
 *#
-

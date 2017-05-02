@@ -13,7 +13,10 @@ module RedHatSupportLib::TelemetryApi
                         /^rules$/,
                         /^(v[0-9]|latest)\/reports$/,
                         /^reports$/,
-                        /^(v[0-9]|latest)\/messaging\/data\/weeklyinfo$/].freeze
+                        /^(v[0-9]|latest)\/messaging\/data\/weeklyinfo$/,
+                        /^(v[0-9]|latest)\/stats\/reports$/,
+                        /^(v[0-9]|latest)\/stats\/systems$/,
+                        /^(v[0-9]|latest)\/stats\/rules$/ ].freeze
 
 
   class Client

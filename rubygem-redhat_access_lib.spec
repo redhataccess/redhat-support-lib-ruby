@@ -4,13 +4,13 @@
 %global gem_name redhat_access_lib
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 1.0.7
+Version: 1.0.8
 Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
 URL: https://github.com/redhataccess/redhat-support-lib-ruby
-Source0: https://rubygems.org/downloads/%{gem_name}-%{version}.gem
+Source0: %{gem_name}-%{version}.gem
 
 
 Requires: %{?scl_prefix_ruby}ruby(rubygems)

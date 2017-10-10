@@ -148,7 +148,7 @@ module RedHatSupportLib::TelemetryApi
     # Returns the machines hash used for /subset/$hash/
     def get_hash(machines)
       branch = get_branch_id
-      hash = Digest::SHA1.hexdigest(machines.join)
+      hash = Digest::SHA1.hexdigest(machines.sort.join)
       "#{branch}__#{hash}"
     end
 

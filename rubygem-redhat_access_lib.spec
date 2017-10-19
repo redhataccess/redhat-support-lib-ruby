@@ -5,7 +5,7 @@
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 1.0.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
@@ -61,6 +61,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Fri Oct 20 2017 Lindani Phiri <lindani@redhat.com> - 1.0.8-2
+- BZ 1449233 (topic filtering bug)
+
 * Tue Jun 06 2017 Lindani Phiri <lindani@redhat.com> - 1.0.7-1
 - BZ 1449233
 

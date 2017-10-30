@@ -61,6 +61,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Mon Oct 30 2017 Lindani Phiri <lphiri@redhat.com> - 1.1.2-1
+- BZ 1492888 - Complete UI overhaul
+
 * Tue Jun 06 2017 Lindani Phiri <lindani@redhat.com> - 1.0.7-1
 - BZ 1449233
 

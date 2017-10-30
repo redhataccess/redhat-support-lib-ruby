@@ -10,13 +10,16 @@ Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
 URL: https://github.com/redhataccess/redhat-support-lib-ruby
-Source0: https://rubygems.org/downloads/%{gem_name}-%{version}.gem
+Source0: %{gem_name}-%{version}.gem
 
 
 Requires: %{?scl_prefix_ruby}ruby(rubygems)
 
 BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 BuildRequires: %{?scl_prefix_ruby}ruby(rubygems)
+
+#Not happy with hardcoded ruby22 scl_prefix here but there is no macro to determine it
+Obsoletes: rh-ruby22-rubygem-redhat_access_lib
 
 BuildArch: noarch
 
@@ -64,30 +67,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 * Mon Oct 30 2017 Lindani Phiri <lphiri@redhat.com> - 1.1.2-1
 - BZ 1492888 - Complete UI overhaul
 
-* Tue Jun 06 2017 Lindani Phiri <lindani@redhat.com> - 1.0.7-1
-- BZ 1449233
-
-* Wed Jan 04 2017 Lindani Phiri <lindani@redhat.com> - 1.0.6-1
-- BZ 1403979
-
-* Sat Sep 17 2016 Lindani Phiri <lindani@redhat.com> - 1.0.5-1
-- BZ 1377025
-
-* Thu Aug 18 2016 Lindani Phiri <lindani@redhat.com> - 1.0.4-1
-- BZ 1362187
-
-* Wed Aug 10 2016 Lindani Phiri <lindani@redhat.com> - 1.0.3-1
-- BZ 1365590
-
-* Tue May 31 2016 Lindani Phiri <lindani@redhat.com> - 1.0.2-1
-- BZ 1340254
-
-* Tue Feb 23 2016 Lindani Phiri <lindani@redhat.com> - 1.0.1-1
-- Resolves 1306850
-
-* Tue Feb 02 2016 Lindani Phiri <lindani@redhat.com> - 1.0.0-1
-- Resolves 1297523
-- Resolves 1293463
+* Wed Sep 21 2016 Lindani Phiri <lphiri@redhat.com> - 0.1.0-1
+- BZ 1376888 - Obsolete ruby22 SCL
+- Up version for new release
 
 * Wed Nov 11 2015 Lindani Phiri <lindani@redhat.com> - 0.0.6-1
 - Fix proxy Bug  BZ 1282576

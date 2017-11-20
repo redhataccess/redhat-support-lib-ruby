@@ -41,8 +41,37 @@ describe "Telemetry API interface" do
       @api.create_subset_route('v3/reports').must_equal('v3/subsets/my_branch_id__my_hash_id/reports')
     end
 
+    it "Correctly creates a subset path for topics" do
+      @api.create_subset_route('latest/topics').must_equal('latest/subsets/my_branch_id__my_hash_id/topics')
+      @api.create_subset_route('latest/topics/id').must_equal('latest/subsets/my_branch_id__my_hash_id/topics/id')
+      @api.create_subset_route('v3/topics').must_equal('v3/subsets/my_branch_id__my_hash_id/topics')
+      @api.create_subset_route('v3/topics/id').must_equal('v3/subsets/my_branch_id__my_hash_id/topics/id')
+    end
+
+    it "Correctly creates a subset path for exports" do
+      @api.create_subset_route('latest/exports/reports').must_equal('latest/subsets/my_branch_id__my_hash_id/exports/reports')
+      @api.create_subset_route('v3/exports/reports').must_equal('v3/subsets/my_branch_id__my_hash_id/exports/reports')
+    end
+
+    it "Correctly creates a subset path for maintainance stats" do
+      @api.create_subset_route('latest/stats/reports').must_equal('latest/subsets/my_branch_id__my_hash_id/stats/reports')
+      @api.create_subset_route('v3/stats/reports').must_equal('v3/subsets/my_branch_id__my_hash_id/stats/reports')
+      @api.create_subset_route('latest/stats/systems').must_equal('latest/subsets/my_branch_id__my_hash_id/stats/systems')
+      @api.create_subset_route('v3/stats/systems').must_equal('v3/subsets/my_branch_id__my_hash_id/stats/systems')
+      @api.create_subset_route('latest/stats/rules').must_equal('latest/subsets/my_branch_id__my_hash_id/stats/rules')
+      @api.create_subset_route('v3/stats/rules').must_equal('v3/subsets/my_branch_id__my_hash_id/stats/rules')
+    end
+
+    it "Correctly creates a subset path for maintenance" do
+      @api.create_subset_route('latest/maintenance').must_equal('latest/subsets/my_branch_id__my_hash_id/maintenance')
+      @api.create_subset_route('v3/maintenance').must_equal('v3/subsets/my_branch_id__my_hash_id/maintenance')
+      assert_nil(@api.create_subset_route('latest/maintenance/xyz'))
+      assert_nil(@api.create_subset_route('v3/maintenance/xyz'))
+    end
+
+
     it "Returns nil when a path is not a subset resouce" do
-      @api.create_subset_route('systems/echo').must_equal(nil)
+      assert_nil(@api.create_subset_route('systems/echo'))
     end
   end
 end

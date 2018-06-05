@@ -2,10 +2,11 @@
 %{!?scl:%global pkg_name %{name}}
 
 %global gem_name redhat_access_lib
+%global __requires_exclude ^rubygem\\((.*)\\)
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 1.1.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
 License: GPLv2+
@@ -20,6 +21,7 @@ BuildRequires: %{?scl_prefix_ruby}ruby(rubygems)
 
 #Not happy with hardcoded ruby22 scl_prefix here but there is no macro to determine it
 Obsoletes: rh-ruby22-rubygem-redhat_access_lib
+Obsoletes: rh-ruby23-rubygem-redhat_access_lib
 
 BuildArch: noarch
 

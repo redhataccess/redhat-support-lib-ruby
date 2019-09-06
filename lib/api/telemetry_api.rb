@@ -74,6 +74,7 @@ module RedHatSupportLib::TelemetryApi
       ldebug ("HTTP proxy is set to #{@http_proxy}")
     end
 
+    # not currently used by foreman-plugin...
     def post_upload(original_params,
                     original_payload)
 
@@ -84,6 +85,7 @@ module RedHatSupportLib::TelemetryApi
                 do_upload: true)
     end
 
+    # not currently used by foreman-plugin...
     def call_tapi_no_subset(original_method,
                             resource,
                             original_params,
@@ -100,9 +102,13 @@ module RedHatSupportLib::TelemetryApi
                   original_payload,
                   extra, use_subsets = true)
 
+      # merge all the params into one hash - this lets us add additional options
+      args = {params: original_params, method: original_method, payload: original_payload}
+      args.merge!(extra) if extra
+
       if (use_subsets && subset_resource = create_subset_route(resource))
         ldebug "Doing subset call to #{subset_resource} (was : #{resource})"
-        response = do_subset_call("#{@api_url}/#{subset_resource}", params: original_params, method: original_method, payload: original_payload)
+        response = do_subset_call("#{@api_url}/#{subset_resource}", args)
         return {data: response, code: response.code}
       else
         if extra && extra[:do_upload]
@@ -110,7 +116,7 @@ module RedHatSupportLib::TelemetryApi
         else
           url = "#{@api_url}/#{resource}"
         end
-        client = default_rest_client(url, params: original_params, method: original_method, payload: original_payload)
+        client = default_rest_client(url, args)
         response = client.execute
         return {data: response, code: response.code}
       end

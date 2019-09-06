@@ -4,7 +4,7 @@
 %global gem_name redhat_access_lib
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 1.1.4
+Version: 1.1.5
 Release: 1%{?dist}
 Summary: REST client library for accessing Red Hat support
 Group: Development/Languages
@@ -61,6 +61,9 @@ cp -pa .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Fri Jul 12 2019 Rex White <rexwhite@redhat.com> - 1.1.5-1
+- BZ 1642194: Allow additional params to be passed to call_tapi and set default timeout to 120s
+
 * Mon Oct 30 2017 Lindani Phiri <lphiri@redhat.com> - 1.1.2-1
 - BZ 1492888 - Complete UI overhaul
 
